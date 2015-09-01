@@ -1794,8 +1794,16 @@ static void binder_transaction(struct binder_proc *proc,
 		proc->stats.process_bnd_cnt++;
 #endif
 
-	if (target_wait)
-		wake_up_interruptible(target_wait);
+	if (target_wait) {
+		if (reply || !(t->flags & TF_ONE_WAY)) {
+			preempt_disable();
+			wake_up_interruptible_sync(target_wait);
+			sched_preempt_enable_no_resched();
+		}
+		else {
+			wake_up_interruptible(target_wait);
+		}
+	}
 	return;
 
 err_get_unused_fd_failed:
@@ -3636,7 +3644,7 @@ static void print_binder_proc_stats(struct seq_file *m,
 
 #ifdef CONFIG_SEC_TRACE_BINDERCNT
 	if (proc->stats.process_bnd_cnt) {
-		seq_printf(m, "  CALLS_TO_TARGET_PROCESS (from %s %d): %d\n", 
+		seq_printf(m, "  CALLS_TO_TARGET_PROCESS (from %s %d): %d\n",
 				proc->tsk->comm, proc->tsk->pid, proc->stats.process_bnd_cnt);
 	}
 #endif
