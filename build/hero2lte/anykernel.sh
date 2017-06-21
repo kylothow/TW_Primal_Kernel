@@ -43,6 +43,13 @@ patch_fstab fstab.samsungexynos8890 /data ext4 flags "wait,check,forceencrypt=fo
 # fstab.samsungexynos8890.fwup
 patch_fstab fstab.samsungexynos8890.fwup /system ext4 flags "wait,verify" "wait"
 
+# default.prop
+replace_line default.prop "ro.secure=1" "ro.secure=0";
+replace_line default.prop "ro.debuggable=0" "ro.debuggable=1";
+replace_line default.prop "persist.sys.usb.config=mtp" "persist.sys.usb.config=mtp,adb";
+insert_line default.prop "persist.service.adb.enable=1" after "persist.sys.usb.config=mtp,adb" "persist.service.adb.enable=1";
+insert_line default.prop "persist.adb.notify=0" after "persist.service.adb.enable=1" "persist.adb.notify=0";
+
 # end ramdisk changes
 
 write_boot;
