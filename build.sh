@@ -245,7 +245,7 @@ FUNC_BUILD_ZIP()
 	cd $ZIPDIR
 	echo "=> Output: $KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip"
 	echo ""
-	zip -r9 ../../out/$KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip * -x modules/\* -x patch/\* -x ramdisk/\*
+	zip -r9 ../../out/$KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip * -x modules/\* -x patch/\*
 
 	echo ""
 	echo "=================================================================="
