@@ -81,7 +81,14 @@ elif [ $1 == 3 ] || [ $1 == 4 ] ; then
 	export VARIANT=kor
 fi
 export ARCH=arm64
-export LOCALVERSION=-${KERNEL_NAME}-v${KERNEL_VERSION}
+
+if [ $(whoami) == kylothow ] && [ $(hostname) == xda-developers ] ; then
+	BUILD_TYPE=""
+else
+	BUILD_TYPE="-UNOFFICIAL"
+fi
+export LOCALVERSION=-${KERNEL_NAME}-v${KERNEL_VERSION}${BUILD_TYPE}
+
 export BUILD_CROSS_COMPILE=../aarch64-uber-linux-android-6.3.1-20170615/bin/aarch64-linux-android-
 export BUILD_JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
 
