@@ -37,6 +37,19 @@ dump_boot;
 
 # begin ramdisk changes
 
+if egrep -q "dreamlte|dream2lte|SM-G950|SM-G955" "/system/build.prop"; then
+  ui_print " ";
+  ui_print "Patching ramdisk for S8 ported ROMs...";
+  insert_line default.prop "ro.oem_unlock_supported=1" after "persist.security.ams.enforcing=1" "ro.oem_unlock_supported=1";
+  replace_file init.environ.rc 750 init.environ.rc;
+  insert_line init.samsungexynos8890.rc "service visiond /system/bin/visiond" after "start secure_storage" "\n# AIR\nservice visiond /system/bin/visiond\n    class main\n    user system\n    group system camera media media_rw\n";
+  replace_file property_contexts 644 property_contexts;
+  replace_file sbin/adbd 777 adbd;
+  replace_file sepolicy 644 sepolicy;
+  replace_file sepolicy_version 644 sepolicy_version;
+  replace_file service_contexts 644 service_contexts;
+fi;
+
 # fstab.samsungexynos8890
 patch_fstab fstab.samsungexynos8890 /system ext4 flags "wait,verify" "wait"
 patch_fstab fstab.samsungexynos8890 /data ext4 flags "wait,check,forceencrypt=footer" "wait,check,encryptable=footer"
