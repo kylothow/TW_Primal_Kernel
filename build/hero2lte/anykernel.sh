@@ -28,7 +28,9 @@ is_slot_device=0;
 
 ## AnyKernel permissions
 # set permissions for included ramdisk files
+chmod 750 $ramdisk/init.primal.rc
 chmod 750 $ramdisk/init.services.rc
+chmod 750 $ramdisk/sbin/kernelinit.sh
 chmod 750 $ramdisk/sbin/sysinit.sh
 
 
@@ -63,9 +65,11 @@ replace_line default.prop "ro.debuggable=0" "ro.debuggable=1";
 replace_line default.prop "persist.sys.usb.config=mtp" "persist.sys.usb.config=mtp,adb";
 insert_line default.prop "persist.service.adb.enable=1" after "persist.sys.usb.config=mtp,adb" "persist.service.adb.enable=1";
 insert_line default.prop "persist.adb.notify=0" after "persist.service.adb.enable=1" "persist.adb.notify=0";
+insert_line default.prop "ro.sys.fw.bg_apps_limit=60" before "debug.atrace.tags.enableflags=0" "ro.sys.fw.bg_apps_limit=60";
 
 # init.rc
-insert_line init.rc "import /init.services.rc" after "import /init.fac.rc" "import /init.services.rc";
+insert_line init.rc "import /init.primal.rc" after "import /init.fac.rc" "import /init.primal.rc";
+insert_line init.rc "import /init.services.rc" after "import /init.primal.rc" "import /init.services.rc";
 
 # end ramdisk changes
 
