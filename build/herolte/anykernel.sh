@@ -31,6 +31,7 @@ is_slot_device=0;
 chmod 750 $ramdisk/init.primal.rc
 chmod 750 $ramdisk/init.services.rc
 chmod 750 $ramdisk/sbin/kernelinit.sh
+chmod 750 $ramdisk/sbin/resetprop
 chmod 750 $ramdisk/sbin/sysinit.sh
 
 
