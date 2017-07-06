@@ -40,6 +40,16 @@ dump_boot;
 
 # begin ramdisk changes
 
+if [ -f "$ramdisk/init.superuser.rc" ]; then
+  ui_print " ";
+  ui_print "WARNING: existence of SuperSU root detected!";
+fi;
+
+if [ -f "$ramdisk/init.magisk.rc" ]; then
+  ui_print " ";
+  ui_print "WARNING: existence of Magisk root detected!";
+fi;
+
 if egrep -q "dreamlte|dream2lte|SM-G950|SM-G955" "/system/build.prop"; then
   ui_print " ";
   ui_print "Patching ramdisk for S8 ported ROMs...";
