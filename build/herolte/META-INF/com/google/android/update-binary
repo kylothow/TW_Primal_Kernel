@@ -46,9 +46,11 @@ bb=/tmp/anykernel/tools/busybox;
 
 ui_print "==================================================";
 ui_print " ";
-ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
-ui_print " ";
 ui_print "AnyKernel2 by osm0sis @ xda-developers";
+ui_print " ";
+ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
+ui_print "Kernel v$(file_getprop /tmp/anykernel/.version kernel.version)";
+ui_print "Linux $(file_getprop /tmp/anykernel/.version linux.version)";
 ui_print " ";
 umount /system 2>/dev/null;
 mount -o ro -t auto /system;

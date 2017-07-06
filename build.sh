@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Kernel Build Script v3.1
+# Kernel Build Script v3.2
 #
 # Copyright (C) 2017 Michele Beccalossi <beccalossi.michele@gmail.com>
 #
@@ -239,13 +239,19 @@ FUNC_BUILD_ZIP()
 	cp $RDIR/arch/$ARCH/boot/Image $ZIPDIR/zImage
 	cp $RDIR/arch/$ARCH/boot/dtb.img $ZIPDIR/dtb
 
+	VERSION=$(grep -Po -m 1 '(?<=VERSION = ).*' $RDIR/Makefile)
+	PATCHLEVEL=$(grep -Po -m 1 '(?<=PATCHLEVEL = ).*' $RDIR/Makefile)
+	SUBLEVEL=$(grep -Po -m 1 '(?<=SUBLEVEL = ).*' $RDIR/Makefile)
+	echo "kernel.version=$KERNEL_VERSION" > $ZIPDIR/.version
+	echo "linux.version=$VERSION.$PATCHLEVEL.$SUBLEVEL" >> $ZIPDIR/.version
+
 	if ! [ -d $RDIR/out ] ; then
 		mkdir $RDIR/out
 	fi
 	cd $ZIPDIR
 	echo "=> Output: $KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip"
 	echo ""
-	zip -r9 ../../out/$KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip * -x modules/\*
+	zip -r9 ../../out/$KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip * .version -x modules/\*
 
 	echo ""
 	echo "=================================================================="
