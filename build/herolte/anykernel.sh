@@ -66,9 +66,14 @@ fi;
 # fstab.samsungexynos8890
 patch_fstab fstab.samsungexynos8890 /system ext4 flags "wait,verify" "wait"
 patch_fstab fstab.samsungexynos8890 /data ext4 flags "wait,check,forceencrypt=footer" "wait,check,encryptable=footer"
+insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /system f2fs" after "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     ext4    ro,errors=panic,noload                                                                                                      wait" "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     f2fs    ro,noatime,noload,nodiratime,discard,nobarrier                                                                              wait";
+insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /cache f2fs" after "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic                                 wait,check" "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check";
+insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /data f2fs" after "/dev/block/platform/155a0000.ufs/by-name/USERDATA       /data       ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic,debug_bdinfo     wait,check,encryptable=footer" "/dev/block/platform/155a0000.ufs/by-name/USERDATA       /data       f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check,encryptable=footer";
 
 # fstab.samsungexynos8890.fwup
 patch_fstab fstab.samsungexynos8890.fwup /system ext4 flags "wait,verify" "wait"
+insert_line fstab.samsungexynos8890.fwup "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /system f2fs" after "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     ext4    ro,errors=panic,noload                                                                                                      wait" "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     f2fs    ro,noatime,noload,nodiratime,discard,nobarrier                                                                              wait";
+insert_line fstab.samsungexynos8890.fwup "/dev/block/platform/155a0000.ufs/by-name/CACHE /cache f2fs" after "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic                                 wait,check" "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check";
 
 # default.prop
 replace_line default.prop "ro.secure=1" "ro.secure=0";
@@ -81,6 +86,9 @@ insert_line default.prop "ro.sys.fw.bg_apps_limit=60" before "debug.atrace.tags.
 # init.rc
 insert_line init.rc "import /init.primal.rc" after "import /init.fac.rc" "import /init.primal.rc";
 insert_line init.rc "import /init.services.rc" after "import /init.primal.rc" "import /init.services.rc";
+
+# init.samsungexynos8890.rc
+insert_line init.samsungexynos8890.rc "mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" after "mount ext4 /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" "    mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro";
 
 # end ramdisk changes
 
