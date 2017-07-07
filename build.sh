@@ -15,8 +15,9 @@
 # GNU General Public License for more details.
 #
 
-KERNEL_NAME="Primal"
-KERNEL_VERSION="1.0.7"
+KERNEL_NAME="Primal_Kernel"
+KERNEL_VERSION="1.1.0"
+KERNEL_BASE="DQF6"
 
 FUNC_CLEAN_ENVIRONMENT()
 {
@@ -87,7 +88,7 @@ if [ $(whoami) == kylothow ] && [ $(hostname) == xda-developers ] ; then
 else
 	BUILD_TYPE="-UNOFFICIAL"
 fi
-export LOCALVERSION=-${KERNEL_NAME}-v${KERNEL_VERSION}${BUILD_TYPE}
+export LOCALVERSION=-${KERNEL_NAME}-v${KERNEL_VERSION}.${KERNEL_BASE}${BUILD_TYPE}
 
 export BUILD_CROSS_COMPILE=../aarch64-uber-linux-android-6.3.1-20170615/bin/aarch64-linux-android-
 export BUILD_JOB_NUMBER=`grep processor /proc/cpuinfo|wc -l`
@@ -242,16 +243,16 @@ FUNC_BUILD_ZIP()
 	VERSION=$(grep -Po -m 1 '(?<=VERSION = ).*' $RDIR/Makefile)
 	PATCHLEVEL=$(grep -Po -m 1 '(?<=PATCHLEVEL = ).*' $RDIR/Makefile)
 	SUBLEVEL=$(grep -Po -m 1 '(?<=SUBLEVEL = ).*' $RDIR/Makefile)
-	echo "kernel.version=$KERNEL_VERSION" > $ZIPDIR/.version
+	echo "kernel.version=$KERNEL_VERSION.$KERNEL_BASE" > $ZIPDIR/.version
 	echo "linux.version=$VERSION.$PATCHLEVEL.$SUBLEVEL" >> $ZIPDIR/.version
 
 	if ! [ -d $RDIR/out ] ; then
 		mkdir $RDIR/out
 	fi
 	cd $ZIPDIR
-	echo "=> Output: $KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip"
+	echo "=> Output: ${KERNEL_NAME}-v${KERNEL_VERSION}.${KERNEL_BASE}${BUILD_TYPE}-${MODEL}${VARIANT}.zip"
 	echo ""
-	zip -r9 ../../out/$KERNEL_NAME-Kernel-v$KERNEL_VERSION-$MODEL$VARIANT.zip * .version -x modules/\*
+	zip -r9 ../../out/${KERNEL_NAME}-v${KERNEL_VERSION}.${KERNEL_BASE}${BUILD_TYPE}-${MODEL}${VARIANT}.zip * .version -x modules/\*
 
 	echo ""
 	echo "=================================================================="
