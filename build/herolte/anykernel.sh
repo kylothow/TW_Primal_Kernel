@@ -82,6 +82,8 @@ replace_line default.prop "persist.sys.usb.config=mtp" "persist.sys.usb.config=m
 insert_line default.prop "persist.service.adb.enable=1" after "persist.sys.usb.config=mtp,adb" "persist.service.adb.enable=1";
 insert_line default.prop "persist.adb.notify=0" after "persist.service.adb.enable=1" "persist.adb.notify=0";
 insert_line default.prop "ro.sys.fw.bg_apps_limit=60" before "debug.atrace.tags.enableflags=0" "ro.sys.fw.bg_apps_limit=60";
+insert_line default.prop "ro.securestorage.support=false" after "debug.atrace.tags.enableflags=0" "ro.securestorage.support=false";\
+insert_line default.prop "wlan.wfd.hdcp=disable" after "debug.atrace.tags.enableflags=0" "wlan.wfd.hdcp=disable";
 
 # init.rc
 insert_line init.rc "import /init.primal.rc" after "import /init.fac.rc" "import /init.primal.rc";
