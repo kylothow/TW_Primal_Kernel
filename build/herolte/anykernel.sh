@@ -28,10 +28,12 @@ is_slot_device=0;
 
 ## AnyKernel permissions
 # set permissions for included ramdisk files
+chmod 640 $ramdisk/fstab.samsungexynos8890
+chmod 640 $ramdisk/fstab.samsungexynos8890.fwup
 chmod 750 $ramdisk/init.primal.rc
 chmod 750 $ramdisk/init.services.rc
-chmod 750 $ramdisk/sbin/kernelinit.sh
 chmod 750 $ramdisk/sbin/resetprop
+chmod 750 $ramdisk/sbin/kernelinit.sh
 chmod 750 $ramdisk/sbin/sysinit.sh
 
 
@@ -43,11 +45,13 @@ dump_boot;
 if [ -f "$ramdisk/init.superuser.rc" ]; then
   ui_print " ";
   ui_print "WARNING: existence of SuperSU root detected!";
+  sleep 3
 fi;
 
 if [ -f "$ramdisk/init.magisk.rc" ]; then
   ui_print " ";
   ui_print "WARNING: existence of Magisk root detected!";
+  sleep 3
 fi;
 
 if egrep -q "dreamlte|dream2lte|SM-G950|SM-G955" "/system/build.prop"; then
@@ -63,33 +67,22 @@ if egrep -q "dreamlte|dream2lte|SM-G950|SM-G955" "/system/build.prop"; then
   replace_file service_contexts 644 service_contexts;
 fi;
 
-# fstab.samsungexynos8890
-patch_fstab fstab.samsungexynos8890 /system ext4 flags "wait,verify" "wait"
-patch_fstab fstab.samsungexynos8890 /data ext4 flags "wait,check,forceencrypt=footer" "wait,check,encryptable=footer"
-insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /system f2fs" after "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     ext4    ro,errors=panic,noload                                                                                                      wait" "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     f2fs    ro,noatime,noload,nodiratime,discard,nobarrier                                                                              wait";
-insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /cache f2fs" after "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic                                 wait,check" "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check";
-insert_line fstab.samsungexynos8890 "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /data f2fs" after "/dev/block/platform/155a0000.ufs/by-name/USERDATA       /data       ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic,debug_bdinfo     wait,check,encryptable=footer" "/dev/block/platform/155a0000.ufs/by-name/USERDATA       /data       f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check,encryptable=footer";
-
-# fstab.samsungexynos8890.fwup
-patch_fstab fstab.samsungexynos8890.fwup /system ext4 flags "wait,verify" "wait"
-insert_line fstab.samsungexynos8890.fwup "/dev/block/platform/155a0000.ufs/by-name/SYSTEM /system f2fs" after "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     ext4    ro,errors=panic,noload                                                                                                      wait" "/dev/block/platform/155a0000.ufs/by-name/SYSTEM         /system     f2fs    ro,noatime,noload,nodiratime,discard,nobarrier                                                                              wait";
-insert_line fstab.samsungexynos8890.fwup "/dev/block/platform/155a0000.ufs/by-name/CACHE /cache f2fs" after "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      ext4    noatime,nosuid,nodev,noauto_da_alloc,discard,journal_async_commit,data=ordered,errors=panic                                 wait,check" "/dev/block/platform/155a0000.ufs/by-name/CACHE          /cache      f2fs    noatime,nosuid,nodev,nodiratime,discard,nobarrier                                                                           wait,check";
-
 # default.prop
-replace_line default.prop "ro.secure=1" "ro.secure=0";
-replace_line default.prop "ro.debuggable=0" "ro.debuggable=1";
-replace_line default.prop "persist.sys.usb.config=mtp" "persist.sys.usb.config=mtp,adb";
+patch_prop default.prop "ro.secure" "0";
+patch_prop default.prop "ro.debuggable" "1";
+patch_prop default.prop "persist.sys.usb.config" "mtp,adb";
 insert_line default.prop "persist.service.adb.enable=1" after "persist.sys.usb.config=mtp,adb" "persist.service.adb.enable=1";
 insert_line default.prop "persist.adb.notify=0" after "persist.service.adb.enable=1" "persist.adb.notify=0";
-insert_line default.prop "ro.sys.fw.bg_apps_limit=60" before "debug.atrace.tags.enableflags=0" "ro.sys.fw.bg_apps_limit=60";
-insert_line default.prop "ro.securestorage.support=false" after "debug.atrace.tags.enableflags=0" "ro.securestorage.support=false";\
-insert_line default.prop "wlan.wfd.hdcp=disable" after "debug.atrace.tags.enableflags=0" "wlan.wfd.hdcp=disable";
 
-# init.rc
-insert_line init.rc "import /init.primal.rc" after "import /init.fac.rc" "import /init.primal.rc";
-insert_line init.rc "import /init.services.rc" after "import /init.primal.rc" "import /init.services.rc";
+insert_line default.prop "ro.sys.fw.bg_apps_limit=60" before "debug.atrace.tags.enableflags=0" "ro.sys.fw.bg_apps_limit=60";
+
+insert_line default.prop "ro.securestorage.support=false" after "debug.atrace.tags.enableflags=0" "ro.securestorage.support=false";\
+insert_line default.prop "wlan.wfd.hdcp=disable" after "ro.securestorage.support=false" "wlan.wfd.hdcp=disable";
 
 # init.samsungexynos8890.rc
+insert_line init.samsungexynos8890.rc "import init.primal.rc" after "import init.remove_recovery.rc" "import init.primal.rc";
+insert_line init.samsungexynos8890.rc "import init.services.rc" after "import init.primal.rc" "import init.services.rc";
+
 insert_line init.samsungexynos8890.rc "mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" after "mount ext4 /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" "    mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro";
 
 # end ramdisk changes
