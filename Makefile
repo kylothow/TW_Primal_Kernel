@@ -416,8 +416,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -std=gnu89 \
-		   -mcpu=cortex-a72.cortex-a53 -mtune=cortex-a72.cortex-a53
+		   -std=gnu89
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
@@ -664,17 +663,25 @@ LDFLAGS		+= --strip-debug -O2
 
 # Optimization flags
 KBUILD_CFLAGS	+= -g0 -DNDEBUG \
+   		   -mtune=exynos-m1 \
+  		   -fgcse-las \
+		   -fgcse-lm \
+		   -fgcse-sm \
 		   -fgraphite \
 		   -fgraphite-identity \
 		   -fivopts \
 		   -floop-block \
 		   -floop-interchange \
+		   -floop-nest-optimize \
 		   -floop-strip-mine \
 		   -fmodulo-sched \
 		   -fmodulo-sched-allow-regmoves \
 		   -fomit-frame-pointer \
 		   -ftree-loop-distribution \
-		   -ftree-loop-linear
+		   -ftree-loop-im \
+   		   -ftree-loop-ivcanon \
+		   -ftree-loop-linear \
+		   -funroll-loops
 
 # These flags need a special toolchain so split them off
 KBUILD_CFLAGS	+= $(call cc-option,-mlow-precision-recip-sqrt,) \

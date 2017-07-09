@@ -25,7 +25,7 @@ LIBGCC 		:= $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
 KBUILD_DEFCONFIG := defconfig
 
 # Optimize for big.LITTLE configuration
-ARM_ARCH_OPT	:= -mcpu=cortex-a72.cortex-a53 -mtune=cortex-a72.cortex-a53
+ARM_ARCH_OPT	:= -mcpu=exynos-m1 -mtune=exynos-m1
 
 # If for some reason compiling with a toolchain that supports neither mcpu or
 # mtune (in which case, wtf?), don't tune at all (march can break assembly)
