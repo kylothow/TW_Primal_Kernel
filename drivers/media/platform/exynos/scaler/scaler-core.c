@@ -2053,6 +2053,7 @@ static void sc_clk_power_disable(struct sc_dev *sc)
 	pm_runtime_put(sc->dev);
 }
 
+#ifdef CONFIG_EXYNOS_CONTENT_PATH_PROTECTION
 static int sc_ctrl_protection(struct sc_dev *sc, struct sc_ctx *ctx, bool en)
 {
 	void *cookie;
@@ -2122,6 +2123,7 @@ err_smc:
 	ret = -EINVAL;
 	return ret;
 }
+#endif
 
 static int sc_open(struct file *file)
 {
