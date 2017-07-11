@@ -681,6 +681,7 @@ KBUILD_CFLAGS	+= -g0 -DNDEBUG \
 		   -ftree-loop-im \
    		   -ftree-loop-ivcanon \
 		   -ftree-loop-linear \
+		   -ftree-vectorize \
 		   -funroll-loops
 
 # These flags need a special toolchain so split them off
