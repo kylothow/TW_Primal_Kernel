@@ -517,11 +517,11 @@ static void cpufreq_interactive_timer(unsigned long data)
 	spin_lock_irqsave(&pcpu->target_freq_lock, flags);
 	do_div(cputime_speedadj, delta_time);
 	loadadjfreq = (unsigned int)cputime_speedadj * 100;
-	cpu_load = loadadjfreq / pcpu->target_freq;
+	cpu_load = loadadjfreq / pcpu->policy->cur;
 	tunables->boosted = tunables->boost_val || now < tunables->boostpulse_endtime;
 
 	if (cpu_load >= tunables->go_hispeed_load || tunables->boosted) {
-		if (pcpu->target_freq < tunables->hispeed_freq) {
+		if (pcpu->policy->cur < tunables->hispeed_freq) {
 			new_freq = tunables->hispeed_freq;
 		} else {
 			new_freq = choose_freq(pcpu, loadadjfreq);
@@ -545,10 +545,10 @@ static void cpufreq_interactive_timer(unsigned long data)
 
 	new_freq = pcpu->freq_table[index].frequency;
 
-	if (pcpu->target_freq >= tunables->hispeed_freq &&
-	    new_freq > pcpu->target_freq &&
+	if (pcpu->policy->cur >= tunables->hispeed_freq &&
+	    new_freq > pcpu->policy->cur &&
 	    now - pcpu->pol_hispeed_val_time <
-	    freq_to_above_hispeed_delay(tunables, pcpu->target_freq)) {
+	    freq_to_above_hispeed_delay(tunables, pcpu->policy->cur)) {
 		trace_cpufreq_interactive_notyet(
 			data, cpu_load, pcpu->target_freq,
 			pcpu->policy->cur, new_freq);
@@ -727,7 +727,7 @@ static int cpufreq_interactive_speedchange_task(void *data)
 			if (max_freq != pcpu->policy->cur) {
 				__cpufreq_driver_target(pcpu->policy,
 							max_freq,
-							CPUFREQ_RELATION_C);
+							CPUFREQ_RELATION_H);
 				for_each_cpu(j, pcpu->policy->cpus) {
 					pjcpu = &per_cpu(cpuinfo, j);
 					pjcpu->pol_hispeed_val_time = hvt;
