@@ -103,6 +103,33 @@ chmod 0644 $root/system/vendor/lib64/libsecure_storage.so;
 rm -f $root/system/app/mcRegistry/mcRegistry/ffffffffd0000000000000000000000a.tlbin;
 mount -o ro,remount -t auto /system;
 
+ui_print " ";
+ui_print "Installing updated graphic libraries...";
+mount -o rw,remount -t auto /system;
+cp -f /tmp/anykernel/system/lib/libdisplay.so $root/system/lib/;
+cp -f /tmp/anykernel/system/lib/libExynosHWCService.so $root/system/lib/;
+cp -f /tmp/anykernel/system/lib/hw/hwcomposer.exynos5.so $root/system/lib/hw/;
+cp -f /tmp/anykernel/system/lib64/libdisplay.so $root/system/lib64/;
+cp -f /tmp/anykernel/system/lib64/libexynosgscaler.so $root/system/lib64/;
+cp -f /tmp/anykernel/system/lib64/libExynosHWCService.so $root/system/lib64/;
+cp -f /tmp/anykernel/system/lib64/libexynosscaler.so $root/system/lib64/;
+cp -f /tmp/anykernel/system/lib64/libexynosv4l2.so $root/system/lib64/;
+cp -f /tmp/anykernel/system/lib64/hw/hwcomposer.exynos5.so $root/system/lib64/hw/;
+cp -f /tmp/anykernel/system/vendor/lib/egl/libGLES_mali.so $root/system/vendor/lib/egl/;
+cp -f /tmp/anykernel/system/vendor/lib64/egl/libGLES_mali.so $root/system/vendor/lib64/egl/;
+chmod 0644 $root/system/lib/libdisplay.so
+chmod 0644 $root/system/lib/libExynosHWCService.so
+chmod 0644 $root/system/lib/hw/hwcomposer.exynos5.so
+chmod 0644 $root/system/lib64/libdisplay.so
+chmod 0644 $root/system/lib64/libexynosgscaler.so
+chmod 0644 $root/system/lib64/libExynosHWCService.so
+chmod 0644 $root/system/lib64/libexynosscaler.so
+chmod 0644 $root/system/lib64/libexynosv4l2.so
+chmod 0644 $root/system/lib64/hw/hwcomposer.exynos5.so
+chmod 0644 $root/system/vendor/lib/egl/libGLES_mali.so;
+chmod 0644 $root/system/vendor/lib64/egl/libGLES_mali.so;
+mount -o ro,remount -t auto /system;
+
 case $(basename "$ZIPFILE" .zip) in
   *-debugging)
     ui_print " ";
