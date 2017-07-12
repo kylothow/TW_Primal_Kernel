@@ -44,3 +44,6 @@ su -c 'echo "temporary none" >> /sys/class/scsi_disk/0:0:0:0/cache_type'
 su -c 'echo "temporary none" >> /sys/class/scsi_disk/0:0:0:1/cache_type'
 su -c 'echo "temporary none" >> /sys/class/scsi_disk/0:0:0:2/cache_type'
 su -c 'echo "temporary none" >> /sys/class/scsi_disk/0:0:0:3/cache_type'
+
+mount -o ro,remount /;
+mount -o ro,remount /system;

@@ -24,3 +24,6 @@ mkswap "/dev/block/zram0/" > dev/null 2>&1;
 swapon "/dev/block/zram0/" > dev/null 2>&1;
 echo "lz4" > /sys/block/zram0/comp_algorithm;
 echo "4" > /sys/block/zram0/max_comp_streams;
+
+mount -o ro,remount /;
+mount -o ro,remount /system;
