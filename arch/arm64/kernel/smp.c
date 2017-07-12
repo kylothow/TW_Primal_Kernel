@@ -119,6 +119,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 	}
 
 	secondary_data.stack = NULL;
+	restore_pcpu_tick(cpu);
 
 	return ret;
 }
@@ -277,6 +278,8 @@ void __cpu_die(unsigned int cpu)
 	 */
 	if (!op_cpu_kill(cpu))
 		pr_warn("CPU%d may not have shut down cleanly\n", cpu);
+
+	save_pcpu_tick(cpu);
 }
 
 /*
