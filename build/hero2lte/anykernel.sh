@@ -100,6 +100,8 @@ insert_line init.samsungexynos8890.rc "import init.services.rc" after "import in
 
 insert_line init.samsungexynos8890.rc "mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" after "mount ext4 /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro" "    mount f2fs /dev/block/platform/155a0000.ufs/by-name/SYSTEM /system wait ro";
 
+replace_string init.samsungexynos8890.rc "write /proc/sys/vm/swappiness 0" "write /proc/sys/vm/swappiness 190" "write /proc/sys/vm/swappiness 0";
+
 # end ramdisk changes
 
 write_boot;
