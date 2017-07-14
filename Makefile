@@ -659,7 +659,7 @@ endif
 ############################
 
 # Strip linker
-LDFLAGS		+= --strip-debug -O2
+LDFLAGS		+= --strip-debug -Ofast
 
 # Optimization flags
 KBUILD_CFLAGS	+= -g0 -DNDEBUG \
