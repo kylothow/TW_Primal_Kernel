@@ -4831,9 +4831,6 @@ dhd_bus_dpc(struct dhd_bus *bus)
 		DHD_GENERAL_UNLOCK(bus->dhd, flags);
 		return 0;
 	}
-#ifdef DHD_PCIE_RUNTIMEPM
-        bus->idlecount = 0;
-#endif /* DHD_PCIE_RUNTIMEPM */
 	bus->dhd->dhd_bus_busy_state |= DHD_BUS_BUSY_IN_DPC;
 	DHD_GENERAL_UNLOCK(bus->dhd, flags);
 

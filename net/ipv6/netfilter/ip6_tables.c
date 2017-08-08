@@ -34,6 +34,7 @@
 
 #ifdef CONFIG_ONESHOT_UID
 #include <net/netfilter/oneshot_uid.h>
+#include <linux/spinlock.h>
 #endif
 
 MODULE_LICENSE("GPL");
@@ -433,16 +434,19 @@ stackpopup:
 			if (unlikely(e == table_base +
 				oneshot_uid_ipv6.myrule_offset))
 				if (table == oneshot_uid_ipv6.myfilter_table &&
-				    !atomic_read(&oneshot_uid_ipv6.replacing_table)) {
+				    read_trylock(&oneshot_uid_ipv6.lock)) {
 					xt_ematch_foreach(ematch, e) {
 						acpar.match =
 							ematch->u.kernel.match;
 						acpar.matchinfo = ematch->data;
 						if (!oneshot_uid_checkmap(
 							&oneshot_uid_ipv6, skb,
-							&acpar))
+							&acpar)) {
+							read_unlock(&oneshot_uid_ipv6.lock);
 							goto stackpopup;
+						}
 					}
+					read_unlock(&oneshot_uid_ipv6.lock);
 				}
 #endif
 			continue;
@@ -1351,12 +1355,12 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
 	}
 
 #ifdef CONFIG_ONESHOT_UID
-	atomic_inc(&oneshot_uid_ipv6.replacing_table);
+	write_lock(&oneshot_uid_ipv6.lock);
 #endif
 	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
 	if (ret != 0) {
 #ifdef CONFIG_ONESHOT_UID
-		atomic_dec(&oneshot_uid_ipv6.replacing_table);
+		write_unlock(&oneshot_uid_ipv6.lock);
 #endif
 		goto free_newinfo;
 	}
@@ -1367,7 +1371,7 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
 			   tmp.num_counters, tmp.counters);
 
 #ifdef CONFIG_ONESHOT_UID
-	atomic_dec(&oneshot_uid_ipv6.replacing_table);
+	write_unlock(&oneshot_uid_ipv6.lock);
 #endif
 
 	if (ret)
